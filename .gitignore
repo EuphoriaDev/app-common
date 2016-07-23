@@ -1,0 +1,30 @@
+# Maven
+target/
+*.ser
+*.ec
+
+# IntelliJ Idea
+out/
+.idea/
+*.ipr
+*.iws
+*.iml
+*.properties
+
+# Android Studio
+/build
+gradle/
+.gradle/
+
+# Eclipse
+.classpath
+.project
+.settings/
+.metadata/
+
+# OS X
+.DS_Store
+
+# Other
+*.log
+/captures
