@@ -14,7 +14,7 @@ import java.io.OutputStream;
  * @since 1.0
  */
 public class ClosedOutputStream extends OutputStream {
-
+    public static final ClosedOutputStream INSTANCE = new ClosedOutputStream();
 
     /**
      * Throws an {@link IOException} to indicate that the stream is closed.

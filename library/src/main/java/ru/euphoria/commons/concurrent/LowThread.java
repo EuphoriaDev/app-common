@@ -4,17 +4,15 @@ package ru.euphoria.commons.concurrent;
 import android.os.Process;
 
 /**
- * Created by user on 28.02.16.
- * <p/>
  * Thread with low priority. So that it will have less chance of impacting
  * the responsiveness of the user interface, but speed of work is decreased.
  *
+ * @author Igor Morozkin
  * @since 1.0
  */
 public class LowThread extends Thread {
-
     /**
-     * Constructs a new {@code Thread} with a {@code Runnable} object and a
+     * Constructs a new {@code LowThread} with a {@code Runnable} object and a
      * newly generated name. The new {@code Thread} will belong to the same
      * {@code ThreadGroup} as the {@code Thread} calling this constructor.
      *
@@ -36,7 +34,8 @@ public class LowThread extends Thread {
 
     @Override
     public void run() {
-        // Sets the background Priority
+        // using the background priority
+        // for smooth user interface
         Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
         super.run();
     }

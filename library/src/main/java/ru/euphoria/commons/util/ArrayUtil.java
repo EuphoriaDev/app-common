@@ -1,23 +1,15 @@
 package ru.euphoria.commons.util;
 
 
-import android.database.Cursor;
-
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
-import java.util.AbstractList;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 /**
- * Static utils methods for array and {@link Collection}
+ * Static utils methods for array.
  *
  * For powerful collection util - use {@link Collections}
  *
@@ -28,7 +20,7 @@ public class ArrayUtil {
     private static final CharsetDecoder DECODER = Charset.defaultCharset().newDecoder();
 
     /** An immutable empty arrays */
-    public static final Object[] EMPTY_OBJECT  = new Object[0];
+    public static final Object[] EMPTY_OBJECTS = new Object[0];
     public static final String[] EMPTE_STRINGS = new String[0];
     public static final byte[]   EMPTY_BYTES   = new byte[0];
     public static final char[]   EMPTY_CHARS   = new char[0];
@@ -41,10 +33,8 @@ public class ArrayUtil {
     /** The index for linear and binary search, if the value is not found */
     public static final int VALUE_NOT_FOUND = -1;
 
-    // private, because uses only static methods
-    private ArrayUtil() {
-        /* empty */
-    }
+    // uses only static methods
+    private ArrayUtil() {}
 
     /**
      * Performs a linear search for value in the ascending array.
@@ -54,13 +44,8 @@ public class ArrayUtil {
      * @param value the value fo find
      * @return the non-negative index of value, or -1 if value not found
      */
-    public static int linearSearch(int[] array, int value) {
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] == value) {
-                return i;
-            }
-        }
-        return VALUE_NOT_FOUND;
+    public static int linearSearch(byte[] array, byte value) {
+        return linearSearch(array, value, 0, array.length);
     }
 
     /**
@@ -69,10 +54,12 @@ public class ArrayUtil {
      *
      * @param array the array to search
      * @param value the value fo find
+     * @param start the start index (inclusive)
+     * @param end   the end index (exclusive)
      * @return the non-negative index of value, or -1 if value not found
      */
-    public static int linearSearch(long[] array, long value) {
-        for (int i = 0; i < array.length; i++) {
+    public static int linearSearch(byte[] array, byte value, int start, int end) {
+        for (int i = start; i < end; i++) {
             if (array[i] == value) {
                 return i;
             }
@@ -89,7 +76,21 @@ public class ArrayUtil {
      * @return the non-negative index of value, or -1 if value not found
      */
     public static int linearSearch(char[] array, char value) {
-        for (int i = 0; i < array.length; i++) {
+        return linearSearch(array, value, 0, array.length);
+    }
+
+    /**
+     * Performs a linear search for value in the ascending array.
+     * Beware that linear search returns only the first found element.
+     *
+     * @param array the array to search
+     * @param value the value fo find
+     * @param start the start index (inclusive)
+     * @param end   the end index (exclusive)
+     * @return the non-negative index of value, or -1 if value not found
+     */
+    public static int linearSearch(char[] array, char value, int start, int end) {
+        for (int i = start; i < end; i++) {
             if (array[i] == value) {
                 return i;
             }
@@ -106,7 +107,21 @@ public class ArrayUtil {
      * @return the non-negative index of value, or -1 if value not found
      */
     public static int linearSearch(short[] array, short value) {
-        for (int i = 0; i < array.length; i++) {
+        return linearSearch(array, value, 0, array.length);
+    }
+
+    /**
+     * Performs a linear search for value in the ascending array.
+     * Beware that linear search returns only the first found element.
+     *
+     * @param array the array to search
+     * @param value the value fo find
+     * @param start the start index (inclusive)
+     * @param end   the end index (exclusive)
+     * @return the non-negative index of value, or -1 if value not found
+     */
+    public static int linearSearch(short[] array, short value, int start, int end) {
+        for (int i = start; i < end; i++) {
             if (array[i] == value) {
                 return i;
             }
@@ -122,8 +137,53 @@ public class ArrayUtil {
      * @param value the value fo find
      * @return the non-negative index of value, or -1 if value not found
      */
-    public static int linearSearch(byte[] array, byte value) {
-        for (int i = 0; i < array.length; i++) {
+    public static int linearSearch(int[] array, int value) {
+        return linearSearch(array, value, 0, array.length);
+    }
+
+    /**
+     * Performs a linear search for value in the ascending array.
+     * Beware that linear search returns only the first found element.
+     *
+     * @param array the array to search
+     * @param value the value fo find
+     * @param start the start index (inclusive)
+     * @param end   the end index (exclusive)
+     * @return the non-negative index of value, or -1 if value not found
+     */
+    public static int linearSearch(int[] array, int value, int start, int end) {
+        for (int i = start; i < end; i++) {
+            if (array[i] == value) {
+                return i;
+            }
+        }
+        return VALUE_NOT_FOUND;
+    }
+
+    /**
+     * Performs a linear search for value in the ascending array.
+     * Beware that linear search returns only the first found element.
+     *
+     * @param array the array to search
+     * @param value the value fo find
+     * @return the non-negative index of value, or -1 if value not found
+     */
+    public static int linearSearch(long[] array, long value) {
+        return linearSearch(array, value, 0, array.length);
+    }
+
+    /**
+     * Performs a linear search for value in the ascending array.
+     * Beware that linear search returns only the first found element.
+     *
+     * @param array the array to search
+     * @param value the value fo find
+     * @param start the start index (inclusive)
+     * @param end   the end index (exclusive)
+     * @return the non-negative index of value, or -1 if value not found
+     */
+    public static int linearSearch(long[] array, long value, int start, int end) {
+        for (int i = start; i < end; i++) {
             if (array[i] == value) {
                 return i;
             }
@@ -140,7 +200,21 @@ public class ArrayUtil {
      * @return the non-negative index of value, or -1 if value not found
      */
     public static int linearSearch(float[] array, float value) {
-        for (int i = 0; i < array.length; i++) {
+        return linearSearch(array, value, 0, array.length);
+    }
+
+    /**
+     * Performs a linear search for value in the ascending array.
+     * Beware that linear search returns only the first found element.
+     *
+     * @param array the array to search
+     * @param value the value fo find
+     * @param start the start index (inclusive)
+     * @param end   the end index (exclusive)
+     * @return the non-negative index of value, or -1 if value not found
+     */
+    public static int linearSearch(float[] array, float value, int start, int end) {
+        for (int i = start; i < end; i++) {
             if (Float.compare(array[i], value) == 0) {
                 return i;
             }
@@ -157,7 +231,21 @@ public class ArrayUtil {
      * @return the non-negative index of value, or -1 if value not found
      */
     public static int linearSearch(double[] array, double value) {
-        for (int i = 0; i < array.length; i++) {
+        return linearSearch(array, value, 0, array.length);
+    }
+
+    /**
+     * Performs a linear search for value in the ascending array.
+     * Beware that linear search returns only the first found element.
+     *
+     * @param array the array to search
+     * @param value the value fo find
+     * @param start the start index (inclusive)
+     * @param end   the end index (exclusive)
+     * @return the non-negative index of value, or -1 if value not found
+     */
+    public static int linearSearch(double[] array, double value, int start, int end) {
+        for (int i = start; i < end; i++) {
             if (Double.compare(array[i], value) == 0) {
                 return i;
             }
@@ -174,7 +262,21 @@ public class ArrayUtil {
      * @return the non-negative index of value, or -1 if value not found
      */
     public static int linearSearch(Object[] array, Object value) {
-        for (int i = 0; i < array.length; i++) {
+        return linearSearch(array, value, 0, array.length);
+    }
+
+    /**
+     * Performs a linear search for value in the ascending array.
+     * Beware that linear search returns only the first found element.
+     *
+     * @param array the array to search
+     * @param value the value fo find
+     * @param start the start index (inclusive)
+     * @param end   the end index (exclusive)
+     * @return the non-negative index of value, or -1 if value not found
+     */
+    public static int linearSearch(Object[] array, Object value, int start, int end) {
+        for (int i = start; i < end; i++) {
             Object o = array[i];
             if (o == value || o.equals(value)) {
                 return i;
@@ -347,50 +449,12 @@ public class ArrayUtil {
     }
 
     /**
-     * Compares the two lists.
-     *
-     * @param list1 the first collection
-     * @param list2 the second collection
-     * @return true, if both list are have same length
-     * and all elements at index is equal according to {@link Object#equals},
-     * false otherwise
-     */
-    public static boolean equals(List list1, List list2) {
-        if (list1 == list2) {
-            return true;
-        }
-
-        if (list1.size() != list2.size()) {
-            return false;
-        }
-
-        for (int i = 0; i < list1.size(); i++) {
-            Object o1 = list1.get(i);
-            Object o2 = list2.get(i);
-            if (!(o1 == null ? o2 == null : o1.equals(o2))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
      * Returns true if the array has the specified value
      *
      * @param array the array to search specified value
      * @param value the value to search for
      */
-    public static boolean contains(int[] array, int value) {
-        return linearSearch(array, value) != VALUE_NOT_FOUND;
-    }
-
-    /**
-     * Returns true if the array has the specified value
-     *
-     * @param array the array to search specified value
-     * @param value the value to search for
-     */
-    public static boolean contains(long[] array, long value) {
+    public static boolean contains(byte[] array, byte value) {
         return linearSearch(array, value) != VALUE_NOT_FOUND;
     }
 
@@ -420,7 +484,17 @@ public class ArrayUtil {
      * @param array the array to search specified value
      * @param value the value to search for
      */
-    public static boolean contains(byte[] array, byte value) {
+    public static boolean contains(int[] array, int value) {
+        return linearSearch(array, value) != VALUE_NOT_FOUND;
+    }
+
+    /**
+     * Returns true if the array has the specified value
+     *
+     * @param array the array to search specified value
+     * @param value the value to search for
+     */
+    public static boolean contains(long[] array, long value) {
         return linearSearch(array, value) != VALUE_NOT_FOUND;
     }
 
@@ -455,36 +529,313 @@ public class ArrayUtil {
     }
 
     /**
-     * Copies all elements from source into new {@link ArrayList}.
-     * For array use copyOf in {@link Arrays} class
+     * Returns the number of elements in the specified array that match the
+     * specified value passed.
      *
-     * @param source the source to copy into new List
-     * @return a new {@link ArrayList} containing
-     * all elements from source
+     * @param array the array to search
+     * @param value the value to find for
      */
-    @SuppressWarnings("unchecked")
-    public static <E> ArrayList<E> copyOf(Collection<E> source) {
-        ArrayList<E> list = new ArrayList<>(source.size());
-        list.addAll(source);
-        return list;
+    public static int frequency(byte[] array, byte value) {
+        if (isEmpty(array)) return 0;
+
+        int count = 0;
+        int index = 0;
+        while ((index = linearSearch(array, value, index, array.length)) != VALUE_NOT_FOUND) {
+            count++;
+            index++;
+        }
+        return count;
     }
 
     /**
-     * Returns a new {@link ArrayList} contains the union
-     * of specified {@link Collection}s
+     * Returns the number of elements in the specified array that match the
+     * specified value passed.
      *
-     * @param list1 the first list, can not be null
-     * @param list2 the second list, can not be null
-     * @throws NullPointerException if lists is null
+     * @param array the array to search
+     * @param value the value to find for
      */
-    public static <E> ArrayList<E> union(Collection<E> list1, Collection<E> list2) {
-        if (list1 == null || list2 == null) {
-            throw new NullPointerException("lists can not be null");
+    public static int frequency(char[] array, char value) {
+        if (isEmpty(array)) return 0;
+
+        int count = 0;
+        int index = 0;
+        while ((index = linearSearch(array, value, index, array.length)) != VALUE_NOT_FOUND) {
+            count++;
+            index++;
         }
-        ArrayList<E> output = new ArrayList<>(list1.size() + list2.size());
-        output.addAll(list1);
-        output.addAll(list2);
-        return output;
+        return count;
+    }
+
+    /**
+     * Returns the number of elements in the specified array that match the
+     * specified value passed.
+     *
+     * @param array the array to search
+     * @param value the value to find for
+     */
+    public static int frequency(int[] array, int value) {
+        if (isEmpty(array)) return 0;
+
+        int count = 0;
+        int index = 0;
+        while ((index = linearSearch(array, value, index, array.length)) != VALUE_NOT_FOUND) {
+            count++;
+            index++;
+        }
+        return count;
+    }
+
+    /**
+     * Returns the number of elements in the specified array that match the
+     * specified value passed.
+     *
+     * @param array the array to search
+     * @param value the value to find for
+     */
+    public static int frequency(long[] array, long value) {
+        if (isEmpty(array)) return 0;
+
+        int count = 0;
+        int index = 0;
+        while ((index = linearSearch(array, value, index, array.length)) != VALUE_NOT_FOUND) {
+            count++;
+            index++;
+        }
+        return count;
+    }
+
+    /**
+     * Returns the number of elements in the specified array that match the
+     * specified value passed.
+     *
+     * @param array the array to search
+     * @param value the value to find for
+     */
+    public static int frequency(float[] array, float value) {
+        if (isEmpty(array)) return 0;
+
+        int count = 0;
+        int index = 0;
+        while ((index = linearSearch(array, value, index, array.length)) != VALUE_NOT_FOUND) {
+            count++;
+            index++;
+        }
+        return count;
+    }
+
+    /**
+     * Returns the number of elements in the specified array that match the
+     * specified value passed.
+     *
+     * @param array the array to search
+     * @param value the value to find for
+     */
+    public static int frequency(double[] array, double value) {
+        if (isEmpty(array)) return 0;
+
+        int count = 0;
+        int index = 0;
+        while ((index = linearSearch(array, value, index, array.length)) != VALUE_NOT_FOUND) {
+            count++;
+            index++;
+        }
+        return count;
+    }
+
+    /**
+     * Returns the number of elements in the specified array that match the
+     * specified value passed.
+     *
+     * @param array the array to search
+     * @param value the value to find for
+     */
+    public static int frequency(Object[] array, Object value) {
+        if (isEmpty(array)) return 0;
+
+        int count = 0;
+        int index = 0;
+        while ((index = linearSearch(array, value, index, array.length)) != VALUE_NOT_FOUND) {
+            count++;
+            index++;
+        }
+        return count;
+    }
+
+    /**
+     * Returns a new single array containing all values
+     * from the specified arrays.
+     *
+     * @param arrays the arrays to concatenate
+     */
+    public static byte[] concat(byte[]... arrays) {
+        int length = 0;
+        for (byte[] array : arrays) {
+            length += array.length;
+        }
+
+        byte[] result = new byte[length];
+        int index = 0;
+        for (byte[] array : arrays) {
+            System.arraycopy(array, 0, result, index, array.length);
+            index += array.length;
+        }
+
+        return result;
+    }
+
+    /**
+     * Returns a new single array containing all values
+     * from the specified arrays.
+     *
+     * @param arrays the arrays to concatenate
+     */
+    public static char[] concat(char[]... arrays) {
+        int length = 0;
+        for (char[] array : arrays) {
+            length += array.length;
+        }
+
+        char[] result = new char[length];
+        int index = 0;
+        for (char[] array : arrays) {
+            System.arraycopy(array, 0, result, index, array.length);
+            index += array.length;
+        }
+
+        return result;
+    }
+
+    /**
+     * Returns a new single array containing all values
+     * from the specified arrays.
+     *
+     * @param arrays the arrays to concatenate
+     */
+    public static short[] concat(short[]... arrays) {
+        int length = 0;
+        for (short[] array : arrays) {
+            length += array.length;
+        }
+
+        short[] result = new short[length];
+        int index = 0;
+        for (short[] array : arrays) {
+            System.arraycopy(array, 0, result, index, array.length);
+            index += array.length;
+        }
+
+        return result;
+    }
+
+    /**
+     * Returns a new single array containing all values
+     * from the specified arrays.
+     *
+     * @param arrays the arrays to concatenate
+     */
+    public static int[] concat(int[]... arrays) {
+        int length = 0;
+        for (int[] array : arrays) {
+            length += array.length;
+        }
+
+        int[] result = new int[length];
+        int index = 0;
+        for (int[] array : arrays) {
+            System.arraycopy(array, 0, result, index, array.length);
+            index += array.length;
+        }
+
+        return result;
+    }
+
+
+    /**
+     * Returns a new single array containing all values
+     * from the specified arrays.
+     *
+     * @param arrays the arrays to concatenate
+     */
+    public static long[] concat(long[]... arrays) {
+        int length = 0;
+        for (long[] array : arrays) {
+            length += array.length;
+        }
+
+        long[] result = new long[length];
+        int index = 0;
+        for (long[] array : arrays) {
+            System.arraycopy(array, 0, result, index, array.length);
+            index += array.length;
+        }
+
+        return result;
+    }
+
+    /**
+     * Returns a new single array containing all values
+     * from the specified arrays.
+     *
+     * @param arrays the arrays to concatenate
+     */
+    public static float[] concat(float[]... arrays) {
+        int length = 0;
+        for (float[] array : arrays) {
+            length += array.length;
+        }
+
+        float[] result = new float[length];
+        int index = 0;
+        for (float[] array : arrays) {
+            System.arraycopy(array, 0, result, index, array.length);
+            index += array.length;
+        }
+
+        return result;
+    }
+
+    /**
+     * Returns a new single array containing all values
+     * from the specified arrays.
+     *
+     * @param arrays the arrays to concatenate
+     */
+    public static double[] concat(double[]... arrays) {
+        int length = 0;
+        for (double[] array : arrays) {
+            length += array.length;
+        }
+
+        double[] result = new double[length];
+        int index = 0;
+        for (double[] array : arrays) {
+            System.arraycopy(array, 0, result, index, array.length);
+            index += array.length;
+        }
+
+        return result;
+    }
+
+    /**
+     * Returns a new single array containing all values
+     * from the specified arrays.
+     *
+     * @param arrays the arrays to concatenate
+     */
+    public static Object[] concat(Object[]... arrays) {
+        int length = 0;
+        for (Object[] array : arrays) {
+            length += array.length;
+        }
+
+        Object[] result = new Object[length];
+        int index = 0;
+        for (Object[] array : arrays) {
+            System.arraycopy(array, 0, result, index, array.length);
+            index += array.length;
+        }
+
+        return result;
     }
 
     /**
@@ -668,11 +1019,125 @@ public class ArrayUtil {
     }
 
     /**
+     * Searches for the minimum element of specified array using linear search.
+     * To search in {@link Collection} you should
+     * use {@link java.util.Collections#max(Collection)}.
+     *
+     * @param array the array to search
+     * @return the min element in specified array
+     */
+    public static double min(double... array) {
+        double min = array[0];
+
+        for (int i = 1; i < array.length; i++) {
+            double value = array[i];
+            if (min > value) {
+                min = value;
+            }
+        }
+        return min;
+    }
+
+    /**
+     * Searches for the minimum element of specified array using linear search.
+     * To search in {@link Collection} you should
+     * use {@link java.util.Collections#max(Collection)}.
+     *
+     * @param array the array to search
+     * @return the min element in specified array
+     */
+    public static float min(float... array) {
+        float min = array[0];
+
+        for (int i = 1; i < array.length; i++) {
+            float value = array[i];
+            if (min > value) {
+                min = value;
+            }
+        }
+        return min;
+    }
+
+    /**
+     * Searches for the minimum element of specified array using linear search.
+     * To search in {@link Collection} you should
+     * use {@link java.util.Collections#max(Collection)}.
+     *
+     * @param array the array to search
+     * @return the min element in specified array
+     */
+    public static char min(char... array) {
+        char min = array[0];
+
+        for (int i = 1; i < array.length; i++) {
+            char value = array[i];
+            if (min > value) {
+                min = value;
+            }
+        }
+        return min;
+    }
+
+    /**
+     * Searches for the minimum element of specified array using linear search.
+     * To search in {@link Collection} you should
+     * use {@link java.util.Collections#max(Collection)}.
+     *
+     * @param array the array to search
+     * @return the min element in specified array
+     */
+    public static short min(short... array) {
+        short min = array[0];
+
+        for (int i = 1; i < array.length; i++) {
+            short value = array[i];
+            if (min > value) {
+                min = value;
+            }
+        }
+        return min;
+    }
+
+
+    /**
+     * Searches for the minimum element of specified array using linear search.
+     * To search in {@link Collection} you should
+     * use {@link java.util.Collections#max(Collection)}.
+     *
+     * @param array the array to search
+     * @return the min element in specified array
+     */
+    public static byte min(byte... array) {
+        byte min = array[0];
+
+        for (int i = 1; i < array.length; i++) {
+            byte value = array[i];
+            if (min > value) {
+                min = value;
+            }
+        }
+        return min;
+    }
+
+    /**
      * Returns the total sum of specified array using linear search
      *
      * @param array the array to calculate
      */
-    public static int total(int... array) {
+    public static long total(byte... array) {
+        int total = 0;
+        for (int value : array) {
+            total += value;
+        }
+        return total;
+    }
+
+    /**
+     * Returns the total sum of specified array using linear search
+     *
+     * @param array the array to calculate
+     */
+    public static long total(int... array) {
         int total = 0;
         for (int value : array) {
             total += value;
@@ -694,44 +1159,44 @@ public class ArrayUtil {
     }
 
     /**
-     * Creates a {@link String} representation of the {@link Collection} passed.
-     * Each element is converted to a {@link String} and separated by {@code ","}.
-     * Returns null if items is null or empty
+     * Returns the total sum of specified array using linear search
      *
-     * @param items the items to convert
-     * @param <T>   the generic type of {@link Collection}
-     * @return the {@link String} representation of items,
-     * or {@code ""} if items is is null or empty
+     * @param array the array to calculate
      */
-    public static <T> String toString(List<T> items) {
-        if (isEmpty(items)) return "";
-
-        StringBuilder buffer = new StringBuilder(items.size() * 12);
-        buffer.append(items.get(0));
-        for (int i = 1; i < items.size(); i++) {
-            buffer.append(',');
-            buffer.append(items.get(i));
+    public static long total(short... array) {
+        long total = 0;
+        for (short value : array) {
+            total += value;
         }
-        return buffer.toString();
+        return total;
     }
 
-    public static String toString(byte[] array) {
-//        try {
-//            return (String) Class.forName("java.lang.StringFactory")
-//                    .getMethod("newStringFromBytes", byte[].class).invoke(null, array);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return new String(array);
-//        }
-
-        try {
-            CharBuffer buffer = DECODER.decode(ByteBuffer.wrap(array));
-            return buffer.toString();
-        } catch (CharacterCodingException e) {
-            e.printStackTrace();
+    /**
+     * Returns the total sum of specified array using linear search
+     *
+     * @param array the array to calculate
+     */
+    public static long total(float... array) {
+        long total = 0;
+        for (float value : array) {
+            total += value;
         }
-        return "";
+        return total;
     }
+
+    /**
+     * Returns the total sum of specified array using linear search
+     *
+     * @param array the array to calculate
+     */
+    public static long total(double... array) {
+        long total = 0;
+        for (double value : array) {
+            total += value;
+        }
+        return total;
+    }
+
 
     /**
      * Moves every element of the specified array to a random new position
@@ -739,6 +1204,76 @@ public class ArrayUtil {
      * @param array the array to manipulate
      */
     public static void shuffle(int... array) {
+        Random random = new Random();
+        for (int i = array.length - 1; i > 0; i--) {
+            int index = random.nextInt(i + 1);
+
+            swap(array, i, index);
+        }
+    }
+
+    /**
+     * Moves every element of the specified array to a random new position
+     *
+     * @param array the array to manipulate
+     */
+    public static void shuffle(long... array) {
+        Random random = new Random();
+        for (int i = array.length - 1; i > 0; i--) {
+            int index = random.nextInt(i + 1);
+
+            swap(array, i, index);
+        }
+    }
+
+    /**
+     * Moves every element of the specified array to a random new position
+     *
+     * @param array the array to manipulate
+     */
+    public static void shuffle(float... array) {
+        Random random = new Random();
+        for (int i = array.length - 1; i > 0; i--) {
+            int index = random.nextInt(i + 1);
+
+            swap(array, i, index);
+        }
+    }
+
+    /**
+     * Moves every element of the specified array to a random new position
+     *
+     * @param array the array to manipulate
+     */
+    public static void shuffle(double... array) {
+        Random random = new Random();
+        for (int i = array.length - 1; i > 0; i--) {
+            int index = random.nextInt(i + 1);
+
+            swap(array, i, index);
+        }
+    }
+
+    /**
+     * Moves every element of the specified array to a random new position
+     *
+     * @param array the array to manipulate
+     */
+    public static void shuffle(char... array) {
+        Random random = new Random();
+        for (int i = array.length - 1; i > 0; i--) {
+            int index = random.nextInt(i + 1);
+
+            swap(array, i, index);
+        }
+    }
+
+    /**
+     * Moves every element of the specified array to a random new position
+     *
+     * @param array the array to manipulate
+     */
+    public static void shuffle(byte... array) {
         Random random = new Random();
         for (int i = array.length - 1; i > 0; i--) {
             int index = random.nextInt(i + 1);
@@ -852,19 +1387,107 @@ public class ArrayUtil {
     }
 
     public static int average(int... array) {
-        long sum = 0;
-        for (int item : array) {
-            sum += item;
-        }
-        return (int) (sum / array.length);
+        return (int) (total(array) / array.length);
     }
 
     public static long average(long... array) {
-        long sum = 0;
-        for (long item : array) {
-            sum += item;
+        return (total(array) / array.length);
+    }
+
+    /**
+     * Modifies the specified {@code array} by reversing the order of the
+     * values.
+     *
+     * @param array the array to reverse.
+     */
+    public static void reverse(int... array) {
+        for (int i = array.length - 1, j = 0; i >= j; i--, j++) {
+            swap(array, i, j);
         }
-        return (sum / array.length);
+    }
+
+    /**
+     * Modifies the specified {@code array} by reversing the order of the
+     * values.
+     *
+     * @param array the array to reverse.
+     */
+    public static void reverse(long... array) {
+        for (int i = array.length - 1, j = 0; i >= j; i--, j++) {
+            swap(array, i, j);
+        }
+    }
+
+    /**
+     * Modifies the specified {@code array} by reversing the order of the
+     * values.
+     *
+     * @param array the array to reverse.
+     */
+    public static void reverse(short... array) {
+        for (int i = array.length - 1, j = 0; i >= j; i--, j++) {
+            swap(array, i, j);
+        }
+    }
+
+    /**
+     * Modifies the specified {@code array} by reversing the order of the
+     * values.
+     *
+     * @param array the array to reverse.
+     */
+    public static void reverse(char... array) {
+        for (int i = array.length - 1, j = 0; i >= j; i--, j++) {
+            swap(array, i, j);
+        }
+    }
+
+    /**
+     * Modifies the specified {@code array} by reversing the order of the
+     * values.
+     *
+     * @param array the array to reverse.
+     */
+    public static void reverse(byte... array) {
+        for (int i = array.length - 1, j = 0; i >= j; i--, j++) {
+            swap(array, i, j);
+        }
+    }
+
+    /**
+     * Modifies the specified {@code array} by reversing the order of the
+     * values.
+     *
+     * @param array the array to reverse.
+     */
+    public static void reverse(float... array) {
+        for (int i = array.length - 1, j = 0; i >= j; i--, j++) {
+            swap(array, i, j);
+        }
+    }
+
+    /**
+     * Modifies the specified {@code array} by reversing the order of the
+     * values.
+     *
+     * @param array the array to reverse.
+     */
+    public static void reverse(double... array) {
+        for (int i = array.length - 1, j = 0; i >= j; i--, j++) {
+            swap(array, i, j);
+        }
+    }
+
+    /**
+     * Modifies the specified {@code array} by reversing the order of the
+     * values.
+     *
+     * @param array the array to reverse.
+     */
+    public static void reverse(Object... array) {
+        for (int i = array.length - 1, j = 0; i >= j; i--, j++) {
+            swap(array, i, j);
+        }
     }
 
     /**
@@ -893,114 +1516,7 @@ public class ArrayUtil {
     }
 
     /**
-     * Creates a {@link String} representation of the specified array passed.
-     * Each element is converted to a {@link String} and separated by {@code ","}.
-     * Returns null if items is null or empty
-     *
-     * @param array the array to convert
-     * @return the {@link String} representation of items,
-     * or {@code ""} if array is null or empty
-     */
-    public static String toString(int... array) {
-        if (array == null || array.length == 0) {
-            return null;
-        }
-
-        StringBuilder buffer = new StringBuilder(array.length * 12);
-        buffer.append(array[0]);
-        for (int i = 1; i < array.length; i++) {
-            buffer.append(',');
-            buffer.append(array[i]);
-        }
-        return buffer.toString();
-    }
-
-    public static int[] toIntArray(List<Integer> list) {
-        int[] array = new int[list.size()];
-        if (isEmpty(list)) {
-            return array;
-        }
-
-        for (int i = 0; i < list.size(); i++) {
-            array[i] = list.get(i);
-        }
-        return array;
-    }
-
-    /**
-     * Returns true if the collection is null or empty
-     *
-     * @param collection the collection to be examined
-     */
-    public static boolean isEmpty(Collection collection) {
-        return collection == null || collection.isEmpty();
-    }
-
-    /**
-     * Returns true if the array is null or empty
-     *
-     * @param array the array to be examined
-     */
-    public static boolean isEmpty(Object[] array) {
-        return array == null || array.length == 0;
-    }
-
-    /**
-     * Returns true if the array is null or empty
-     *
-     * @param array the array to be examined
-     */
-    public static boolean isEmpty(long[] array) {
-        return array == null || array.length == 0;
-    }
-
-    /**
-     * Returns true if the array is null or empty
-     *
-     * @param array the array to be examined
-     */
-    public static boolean isEmpty(int[] array) {
-        return array == null || array.length == 0;
-    }
-
-    /**
-     * Returns true if the array is null or empty
-     *
-     * @param array the array to be examined
-     */
-    public static boolean isEmpty(char[] array) {
-        return array == null || array.length == 0;
-    }
-
-    /**
-     * Returns true if the array is null or empty
-     *
-     * @param array the array to be examined
-     */
-    public static boolean isEmpty(short[] array) {
-        return array == null || array.length == 0;
-    }
-
-    /**
-     * Returns true if the array is null or empty
-     *
-     * @param array the array to be examined
-     */
-    public static boolean isEmpty(float[] array) {
-        return array == null || array.length == 0;
-    }
-
-    /**
-     * Returns true if the array is null or empty
-     *
-     * @param array the array to be examined
-     */
-    public static boolean isEmpty(double[] array) {
-        return array == null || array.length == 0;
-    }
-
-    /**
-     * Returns true if the array is null or empty
+     * Returns true if the specified array is null or empty
      *
      * @param array the array to be examined
      */
@@ -1009,49 +1525,74 @@ public class ArrayUtil {
     }
 
     /**
-     * Wraps cursor in list
+     * Returns true if the specified array is null or empty
      *
-     * @param cursor the cursor to wrap
+     * @param array the array to be examined
      */
-    @SuppressWarnings("unchecked")
-    public static CursorListWrapper cursorWrapper(Cursor cursor) {
-        return new CursorListWrapper(cursor);
+    public static boolean isEmpty(char[] array) {
+        return array == null || array.length == 0;
     }
 
-    public static class CursorListWrapper extends AbstractList<Cursor> {
-        private Cursor cursor;
+    /**
+     * Returns true if the specified array is null or empty
+     *
+     * @param array the array to be examined
+     */
+    public static boolean isEmpty(short[] array) {
+        return array == null || array.length == 0;
+    }
 
-        public CursorListWrapper(Cursor cursor) {
-            this.cursor = cursor;
-        }
+    /**
+     * Returns true if the specified array is null or empty
+     *
+     * @param array the array to be examined
+     */
+    public static boolean isEmpty(int[] array) {
+        return array == null || array.length == 0;
+    }
 
-        @Override
-        public Cursor get(int location) {
-            cursor.moveToPosition(location);
-            return cursor;
-        }
+    /**
+     * Returns true if the specified array is null or empty
+     *
+     * @param array the array to be examined
+     */
+    public static boolean isEmpty(long[] array) {
+        return array == null || array.length == 0;
+    }
 
-        public Cursor getCursor() {
-            return cursor;
-        }
+    /**
+     * Returns true if the specified array is null or empty
+     *
+     * @param array the array to be examined
+     */
+    public static boolean isEmpty(float[] array) {
+        return array == null || array.length == 0;
+    }
 
-        public void setCursor(Cursor newCursor) {
-            if (cursor != null && cursor != newCursor) {
-                cursor.close();
-                cursor = null;
-            }
-            cursor = newCursor;
-        }
+    /**
+     * Returns true if the specified array is null or empty
+     *
+     * @param array the array to be examined
+     */
+    public static boolean isEmpty(double[] array) {
+        return array == null || array.length == 0;
+    }
 
-        @Override
-        public int size() {
-            return cursor.getCount();
-        }
+    /**
+     * Returns true if the specified array is null or empty
+     *
+     * @param array the array to be examined
+     */
+    public static boolean isEmpty(Object[] array) {
+        return array == null || array.length == 0;
+    }
 
-        @Override
-        public void clear() {
-            cursor.close();
-        }
-
+    /**
+     * Returns true if the specified collection is null or empty
+     *
+     * @param collection the collection to be examined
+     */
+    public static boolean isEmpty(Collection collection) {
+        return collection == null || collection.isEmpty();
     }
 }

@@ -1,8 +1,9 @@
-package ru.euphoria.commons.base;
+package ru.euphoria.commons.cache;
 
 /**
  * The base interface for caching objects
  *
+ * @author Igor Morozkin
  * @since 1.0
  */
 public interface Cache<K, V> {

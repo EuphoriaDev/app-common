@@ -28,3 +28,4 @@ gradle/
 # Other
 *.log
 /captures
+Main.java

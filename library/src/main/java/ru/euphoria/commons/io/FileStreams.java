@@ -1,24 +1,19 @@
 package ru.euphoria.commons.io;
 
-import android.os.Build;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.math.BigInteger;
 
-import static ru.euphoria.commons.io.StreamFactory.BUFFER_SIZE;
-import static ru.euphoria.commons.io.StreamFactory.CHAR_BUFFER_SIZE;
+import ru.euphoria.commons.util.AndroidUtil;
+import ru.euphoria.commons.util.ArrayUtil;
 
 /**
  * Provides static utils methods for manipulation with the file system.
@@ -26,18 +21,32 @@ import static ru.euphoria.commons.io.StreamFactory.CHAR_BUFFER_SIZE;
  *
  * Example to init api and execute users.get request:
  * <pre>
- *     // Read all lines from file
- *     String lines = FileStreams.read(temp);
+ *     // create buffered reader for file
+ *     Reader reader = EasyStreams.buffer(FileStreams.reader(temp));
  *
- *     // Read bytes from connection stream
+ *     // read all lines from file
+ *     String lines = FileStreams.read(file);
+ *
+ *     // read bytes from net connection stream
  *     byte[] array = FileStreams.readBytes(connection.getInputStream());
+ *
+ *     // write text into file
+ *     FileStreams.write("Hello from file", file);
+ *
+ *     // copy file from one to second
+ *     FileStreams.copy(temp, file);
+ *
+ *     // Clean directory
+ *     FileStreams.delete(directory);
+ *
+ *     // and more...
  * </pre>
  *
  * @author Igor Morozkin
  * @since 1.0
  */
 public class FileStreams {
-    private static final char lineSeparatorChar = lineSeparator().charAt(0);
+    public static final char lineSeparatorChar = lineSeparator().charAt(0);
 
     public static final int ONE_KB = 1024;
     public static final int ONE_MB = ONE_KB * 1024;
@@ -54,135 +63,100 @@ public class FileStreams {
     private FileStreams() {}
 
     /**
-     * Reads all characters from specified file
+     * Reads text from specified file
      *
      * @param from the file to read from
      * @throws IOException if an I/O error occurs reading from the stream
      */
     public static String read(File from) throws IOException {
-        BufferedReader reader = null;
-        try {
-            reader = StreamFactory.createReader(from);
-            StringBuilder buffer = new StringBuilder(CHAR_BUFFER_SIZE);
-            copy(reader, buffer);
-            return buffer.toString();
-        } finally {
-            if (reader != null) reader.close();
-        }
+        return EasyStreams.read(reader(from));
     }
 
     /**
-     * Read all bytes from specified {@link InputStream} into a byte array.
+     * Reads all characters from specified file
      *
-     * @param from the input to read
+     * @param from the file to read from
      * @throws IOException if an I/O error occurs reading from the stream
      */
-    public static byte[] readBytes(InputStream from) throws IOException {
-        ByteArrayOutputStream output = new ByteArrayOutputStream(Math.max(from.available(), BUFFER_SIZE));
-        copy(from, output);
+    public static char[] readChars(File from) throws IOException {
+        return EasyStreams.readChars(reader(from));
+    }
 
-        from.close();
-        return output.toByteArray();
+    /**
+     * Read all bytes from specified file.
+     *
+     * @param from the file to read from
+     * @throws IOException if an I/O error occurs reading from the stream
+     */
+    public static byte[] readBytes(File from) throws IOException {
+        return EasyStreams.readBytes(new FileInputStream(from));
+    }
+
+    /**
+     * Reads all characters separated by lines from specified {@link File}
+     *
+     * @param from the file to read from
+     * @throws IOException if an I/O error occurs reading from the stream
+     */
+    public static String[] readLines(File from) throws IOException {
+        return read(from).split(lineSeparator());
     }
 
     /**
      * Writes text data into specified file.
      *
-     * @param file the file to read into
-     * @param data the text data to write
+     * @param from the text data to write
+     * @param to   the file to read into
      * @throws IOException if an I/O error occurs writing to file
      */
-    public static void write(File file, String data) throws IOException {
-        BufferedWriter writer = null;
-        try {
-            writer = StreamFactory.createWriter(file);
-            writer.write(data);
-            writer.flush();
-        } finally {
-            if (writer != null) writer.close();
-        }
+    public static void write(String from, File to) throws IOException {
+        EasyStreams.write(from, writer(to));
     }
 
     /**
      * Writes byte array into specified file.
      *
-     * @param file  the file to read into
-     * @param array the bytes to write
+     * @param from the bytes to write
+     * @param to   the file to read into
      * @throws IOException if an I/O error occurs writing to file
      */
-    public static void write(File file, byte[] array) throws IOException {
-        OutputStream output = null;
-        try {
-            output = StreamFactory.createBuffered(new FileOutputStream(file));
-            output.write(array);
-            output.flush();
-        } finally {
-            if (output != null) output.close();
-        }
+    public static void write(byte[] from, File to) throws IOException {
+        EasyStreams.write(from, new FileOutputStream(to));
     }
 
     /**
-     * Copies all characters from the {@link Reader} to {@link StringBuilder} objects.
-     * Does not close or flush either object.
+     * Appends byte array into specified file.
      *
-     * @param from the object to read from
-     * @param to   the object to write to
-     * @return the number of characters copied
-     * @throws IOException if an I/O error occurs
+     * @param from the bytes to append
+     * @param to   the file to read into
+     * @throws IOException if an I/O error occurs writing to file
      */
-    public static long copy(Reader from, StringBuilder to) throws IOException {
-        // it is faster than CharBuffer and BufferedReader.readLine
-        char[] buff = new char[CHAR_BUFFER_SIZE];
-        int read;
-        long total = 0;
-
-        while ((read = from.read(buff)) != -1) {
-            to.append(buff, 0, read);
-            total += read;
-        }
-        return total;
+    public static void append(byte[] from, File to) throws IOException {
+        EasyStreams.write(from, new FileOutputStream(to, true));
     }
 
     /**
-     * Copies all characters from the {@link Reader} to {@link Writer} objects.
-     * Does not close or flush either object.
+     * Appends characters array into specified file.
      *
-     * @param from the object to read from
-     * @param to   the object to write to
-     * @return the number of characters copied
-     * @throws IOException if an I/O error occurs
+     * @param from the bytes to append
+     * @param to   the file to read into
+     * @throws IOException if an I/O error occurs writing to file
      */
-    public static long copy(Reader from, Writer to) throws IOException {
-        char[] buffer = new char[CHAR_BUFFER_SIZE];
-        int read;
-        long total = 0;
-
-        while ((read = from.read(buffer)) != -1) {
-            to.write(buffer, 0, read);
-            total += read;
-        }
-        return total;
+    public static void append(char[] from, File to) throws IOException {
+        EasyStreams.write(from, new FileWriter(to, true));
     }
 
     /**
-     * Copies all bytes from the {@link InputStream} to {@link OutputStream} objects.
-     * Does not close or flush either object.
+     * Appends text data into specified file.
      *
-     * @param from the object to read from
-     * @param to   the object to write to
-     * @return the number of bytes copied
-     * @throws IOException if an I/O error occurs
+     * @param from the text data to write
+     * @param to   the file to read into
+     * @throws IOException if an I/O error occurs writing to file
      */
-    public static long copy(InputStream from, OutputStream to) throws IOException {
-        byte[] buffer = new byte[BUFFER_SIZE];
-        int read;
-        long total = 0;
-
-        while ((read = from.read(buffer)) != -1) {
-            to.write(buffer, 0, read);
-            total += read;
-        }
-        return total;
+    public static void append(CharSequence from, File to) throws IOException {
+        EasyStreams.write(from instanceof String
+                ? ((String) from)
+                : from.toString(), new FileWriter(to, true));
     }
 
     /**
@@ -190,24 +164,10 @@ public class FileStreams {
      *
      * @param from the source file to read from
      * @param to   the destination file to write
-     * @return the number of bytes copied
      * @throws IOException if an I/O error occurs
      */
-    public static long copy(File from, File to) throws IOException {
-        InputStream reader = null;
-        OutputStream writer = null;
-
-        try {
-            reader = StreamFactory.createBuffered(new FileInputStream(from));
-            writer = StreamFactory.createBuffered(new FileOutputStream(to));
-            return copy(reader, writer);
-        } finally {
-            if (reader != null) reader.close();
-            if (writer != null) {
-                writer.flush();
-                writer.close();
-            }
-        }
+    public static void copy(File from, File to) throws IOException {
+        write(readBytes(from), to);
     }
 
     /**
@@ -223,12 +183,10 @@ public class FileStreams {
         boolean success = from.renameTo(to);
         if (!success) {
             // can't rename file. try to copy
-            long copied = copy(from, to);
-            if (copied > 0) {
-                // copy was successful
-                if (!from.delete()) {
-                    throw new IOException("Unable to delete file: " + to);
-                }
+            copy(from, to);
+            // copy was successful
+            if (!from.delete()) {
+                throw new IOException("Unable to delete file: " + to);
             }
         }
     }
@@ -236,37 +194,75 @@ public class FileStreams {
     /**
      * Clean and delete directory or file
      *
-     * @param directory the dir to delete
+     * @param dir the dir to delete
      */
-    public static void delete(File directory) {
-        if (directory.isDirectory()) {
-            File[] files = directory.listFiles();
+    public static void delete(File dir) {
+        if (dir.isDirectory()) {
+            File[] files = dir.listFiles();
             for (File file : files) {
                 delete(file);
             }
         } else {
-            directory.delete();
+            dir.delete();
         }
     }
-
     /**
      * Returns the system-dependent line separator.
      * Used to split lines on text file. On Android, this is {@code "\n"}
      */
     public static String lineSeparator() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (AndroidUtil.hasKitKat()) {
             return System.lineSeparator();
         } else {
             return "\n";
         }
     }
 
-    public static String toString(InputStream input) throws IOException {
-        InputStreamReader reader = new InputStreamReader(input);
-        StringBuilder builder = new StringBuilder(128);
-        copy(reader, builder);
+    /**
+     * Searches file by name on specified dir.
+     *
+     * @param dir  the parent directory
+     * @param name the file name to search
+     * @throws IllegalArgumentException if specified file directory is file
+     */
+    public static File search(File dir, String name) {
+        if (!dir.isDirectory()) {
+            throw new IllegalArgumentException("dir can't be file.");
+        }
 
-        reader.close();
-        return builder.toString();
+        File[] files = dir.listFiles();
+        if (ArrayUtil.isEmpty(files)) {
+            return null;
+        }
+
+        for (File file : files) {
+            if (file.isDirectory()) {
+                search(file, name);
+            } else if (file.getName().contains(name)) {
+                return file;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Creates a new {@link Reader} for specified file to read.
+     *
+     * @param from the file to read
+     * @throws FileNotFoundException if file don't exist
+     */
+    public static Reader reader(File from) throws FileNotFoundException {
+        return new InputStreamReader(new FileInputStream(from), Charsets.UTF_8);
+    }
+
+    /**
+     * Creates a new {@link Writer} for specified file to write.
+     *
+     * @param to the file to write
+     * @throws FileNotFoundException if file can't be opened for writing
+     */
+    public static Writer writer(File to) throws FileNotFoundException {
+        return new OutputStreamWriter(new FileOutputStream(to), Charsets.UTF_8);
     }
 }

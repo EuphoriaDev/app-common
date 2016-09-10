@@ -9,6 +9,8 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 
+import ru.euphoria.commons.util.AndroidUtil;
+
 /**
  *
  * @author Paul Burke
@@ -24,7 +26,7 @@ public class FileChooser {
      * @param uri     The Uri to query.
      */
     public static String getPath(final Context context, final Uri uri) {
-        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+        final boolean isKitKat = AndroidUtil.hasKitKat();
 
         // DocumentProvider
         if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {

@@ -9,6 +9,8 @@ import ru.euphoria.commons.annotation.NonNull;
 
 /**
  * A set of color-related utility methods, building upon those available in {@code Color}.
+ *
+ * @since 1.0
  */
 public class ColorUtil {
 
@@ -16,6 +18,94 @@ public class ColorUtil {
     private static final int MIN_ALPHA_SEARCH_PRECISION = 1;
 
     private ColorUtil() {}
+
+    /**
+     * Darkens color on 35%. a.k.a pressed color of button
+     *
+     * @param color the color to darken
+     * @return a new color which is darken of specified color
+     */
+    public static int darkenColor(int color) {
+        float[] hsv = new float[3];
+        Color.colorToHSV(color, hsv);
+        hsv[2] *= 0.75f;
+        color = Color.HSVToColor(hsv);
+        return color;
+    }
+
+    /**
+     * Lighten color on 10%
+     *
+     * @param color the color to lighten
+     * @return a new color which is lighten of specified color
+     */
+    public static int lightenColor(int color) {
+        return lightenColor(color, 1.1f);
+    }
+
+    /**
+     * Lighten color
+     *
+     * @param color the color to lighten
+     * @return a new color which is lighten of specified color
+     */
+    public static int lightenColor(int color, float lightFactor) {
+        float[] hsv = new float[3];
+        Color.colorToHSV(color, hsv);
+        hsv[2] *= lightFactor;
+        return Color.HSVToColor(hsv);
+    }
+
+    /**
+     * Saturate Color
+     *
+     * @param color  the color to saturate
+     * @param factor the saturate factor
+     * @return a new color which is saturated of specified color
+     */
+    public static int saturateColor(int color, float factor) {
+        float[] hsv = new float[3];
+        Color.colorToHSV(color, hsv);
+        hsv[1] *= factor;
+        return Color.HSVToColor(hsv);
+    }
+
+    /**
+     * Lighten color on 100%, e.g. material from 50 to 100
+     *
+     * @param color the color to saturate
+     * @return a new color which is saturated of specified color
+     */
+    public static int saturateColor(int color) {
+        return saturateColor(color, 2f);
+    }
+
+    /**
+     * Set alpha to color on 15%
+     *
+     * @param color the color to set alpha
+     * @return a new color which is alpha of specified color
+     */
+    public static int alphaColor(int color) {
+        return alphaColor(color, 0.85f);
+    }
+
+    /**
+     * Set alpha to color
+     *
+     * @param color       the color to set alpha
+     * @param alphaFactor the factor for alpha, range [0...1]
+     * @return a new color which is alpha of specified color
+     */
+    public static int alphaColor(int color, float alphaFactor) {
+        int alpha = Color.alpha(color);
+
+        int red = Color.red(color);
+        int green = Color.green(color);
+        int blue = Color.blue(color);
+
+        return Color.argb((int) (alpha * alphaFactor), red, green, blue);
+    }
 
     /**
      * Composite two potentially translucent colors over each other and returns the result.

@@ -7,6 +7,7 @@ import java.util.concurrent.ThreadFactory;
 /**
  * Simple thread executor
  *
+ * @author Igor Morozkin
  * @since 1.0
  */
 public class ThreadExecutor {
