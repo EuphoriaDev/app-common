@@ -1,15 +1,12 @@
 package ru.euphoria.commons.http;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.ByteArrayInputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 
 import ru.euphoria.commons.io.EasyStreams;
-import ru.euphoria.commons.util.ArrayUtil;
+import ru.euphoria.commons.json.JsonObject;
 
 import static java.net.HttpURLConnection.HTTP_MOVED_PERM;
 import static java.net.HttpURLConnection.HTTP_MOVED_TEMP;
@@ -33,7 +30,7 @@ public class Response implements Closeable {
 
     private int code;
     private String message;
-    private InputStream content;
+    private byte[] content;
     private Exception cause;
 
     /**
@@ -43,7 +40,7 @@ public class Response implements Closeable {
      * @param code    the response code
      * @param content the content input stream
      */
-    Response(String message, int code, InputStream content) {
+    Response(String message, int code, byte[] content) {
         this.message = message;
         this.code = code;
         this.content = content;
@@ -118,7 +115,7 @@ public class Response implements Closeable {
      * Return inputStream of this Response
      */
     public InputStream getContent() {
-        return content;
+        return new ByteArrayInputStream(asBytes());
     }
 
     /**
@@ -135,7 +132,7 @@ public class Response implements Closeable {
      */
     @Override
     public void close() {
-        EasyStreams.close(content);
+//        EasyStreams.close(content);
     }
 
     /**
@@ -157,28 +154,23 @@ public class Response implements Closeable {
 
     public byte[] asBytes() {
         checkReleased();
-        try {
-            return EasyStreams.readBytes(content);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return ArrayUtil.EMPTY_BYTES;
+        return content;
     }
 
     public String asString() {
         checkReleased();
         try {
-            return EasyStreams.read(content);
+            return EasyStreams.read(getContent());
         } catch (IOException e) {
             e.printStackTrace();
         }
         return "";
     }
 
-    public JSONObject asJson() {
+    public JsonObject asJson() {
         try {
-            return new JSONObject(asString());
-        } catch (JSONException e) {
+            return new JsonObject(asString());
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;

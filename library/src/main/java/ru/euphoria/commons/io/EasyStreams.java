@@ -17,6 +17,7 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.HttpURLConnection;
+import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -144,7 +145,6 @@ public class EasyStreams {
     public static char[] readChars(InputStream from) throws IOException {
         return readChars(from, UTF_8);
     }
-
 
     /**
      * Read all characters from specified {@link InputStream} into a char array.
@@ -509,15 +509,15 @@ public class EasyStreams {
     }
 
     /**
-     * Closes the specified {@link HttpURLConnection} object without throws {@link Exception}.
+     * Closes the specified {@link URLConnection} object without throws {@link Exception}.
      *
      * @param c the object to close, may me null or already closed
      * @return true if object is closed, false otherwise
      */
-    public static boolean close(HttpURLConnection c) {
-        if (c != null) {
+    public static boolean close(URLConnection c) {
+        if (c != null && c instanceof HttpURLConnection) {
             try {
-                c.disconnect();
+                ((HttpURLConnection) c).disconnect();
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -543,6 +543,5 @@ public class EasyStreams {
         }
         return false;
     }
-
 
 }

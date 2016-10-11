@@ -4,6 +4,7 @@ import android.os.Build;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -98,10 +99,15 @@ public class Client {
         HttpURLConnection connection = null;
         try {
             connection = createConnection(request);
-            byte[] content = EasyStreams.readBytes(connection.getInputStream());
+
+            InputStream stream = connection.getInputStream();
+            String encoding = connection.getContentEncoding();
+            if ("gzip".equalsIgnoreCase(encoding)) {
+                stream = EasyStreams.gzip(stream);
+            }
 
             return new Response(connection.getResponseMessage(), connection.getResponseCode(),
-                    new ByteArrayInputStream(content));
+                    EasyStreams.readBytes(stream));
         } finally {
             EasyStreams.close(connection);
         }
@@ -111,16 +117,15 @@ public class Client {
      * Creates a new {@link java.net.URLConnection} for specified request.
      */
     private static HttpURLConnection createConnection(Request request) throws IOException {
-        HttpURLConnection connection = (HttpURLConnection) new URL(request.url).openConnection();
+        HttpURLConnection connection = (HttpURLConnection) new URL(request.params == null ? request.url : request.params.join(request.url)).openConnection();
         connection.setReadTimeout(request.readTimeout);
         connection.setConnectTimeout(request.connectTimeout);
         connection.setDoInput(true);
-        connection.setInstanceFollowRedirects(true);
         connection.setUseCaches(request.usesCache);
         connection.setDoOutput(request.isPost());
         connection.setRequestMethod(request.method);
         connection.setRequestProperty(Headers.USER_AGENT, request.userAgent);
-
+        connection.setRequestProperty("Accept-Encoding", "gzip");
         return connection;
     }
 }

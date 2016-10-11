@@ -1,7 +1,8 @@
 package ru.euphoria.commons.http;
 
 /**
- * Class for make and config the HTTP Request
+ * Class for make and config the HTTP Request.
+ *
  * @author Igor Morozkin
  * @since 1.0
  */
@@ -16,6 +17,7 @@ public class Request {
     public final String url;
     public final String method;
     public final String userAgent;
+    public final Params params;
     public final int connectTimeout;
     public final int readTimeout;
     public final boolean usesCache;
@@ -24,6 +26,7 @@ public class Request {
         this.url = builder.url;
         this.method = builder.method;
         this.userAgent = builder.userAgent;
+        this.params = builder.params;
         this.connectTimeout = builder.connectTimeout;
         this.readTimeout = builder.readTimeout;
         this.usesCache = builder.usesCache;
@@ -80,6 +83,7 @@ public class Request {
         private String url;
         private String method;
         private String userAgent;
+        private Params params;
         private int connectTimeout;
         private int readTimeout;
         private boolean usesCache;
@@ -106,6 +110,31 @@ public class Request {
             return this;
         }
 
+        public Builder params(Params params) {
+            this.params = params;
+            return this;
+        }
+
+        public Builder putParam(String name, String value) {
+            createParams().put(name, value);
+            return this;
+        }
+
+        public Builder putParam(String name, int value) {
+            createParams().put(name, value);
+            return this;
+        }
+
+        public Builder putParam(String name, long value) {
+            createParams().put(name, value);
+            return this;
+        }
+
+        public Builder putParam(String name, boolean value) {
+            createParams().put(name, value);
+            return this;
+        }
+
         public Builder timeout(int read, int connect) {
             this.readTimeout = read;
             this.connectTimeout = connect;
@@ -119,6 +148,13 @@ public class Request {
 
         public Request build() {
             return new Request(this);
+        }
+
+        private Params createParams() {
+            if (params == null) {
+                params = new Params();
+            }
+            return params;
         }
     }
 

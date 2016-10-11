@@ -19,7 +19,7 @@ import static java.lang.annotation.RetentionPolicy.CLASS;
  * @author Igor Morozkin
  * @since 1.0
  */
-public class Headers {
+public class  Headers {
 
     /**
      * The list of valid formats resource, e.g. text/plain
